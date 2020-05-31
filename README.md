@@ -9,3 +9,4 @@ TODO:
 - Add formatter for the code (to make it look more clean)  Ctrl+K, Ctrl+F
 - Find all the pizzeria info
 - Store pizzeria's into file? Easier for array/list handling?
+- Figure out if ROIPizzaSolution.sln can be removed from GIT
