@@ -9,6 +9,92 @@ namespace ROIPizza
     {
         static void Main(string[] args)
         {
+            InitializePizzeriaList();
+
+            DisplayMenu();
+
+            try
+            {
+
+                bool loop = true;
+                while (loop)
+                {
+                    Console.WriteLine("\nChoose operation: ");
+                    int selection = Int16.Parse(Console.ReadLine());
+                    switch (selection)
+                    {
+                        case 1:
+                            FixDisplay();
+                            Console.WriteLine("Displaying all pizzerias");
+                            DisplayEachPizzeria();
+                            break;
+                        case 2:
+                            FixDisplay();
+                            Console.WriteLine("Displaying all pizzerias you have not visited");
+                            DisplayNotVisitedPizzerias();
+                            break;
+                        case 3:
+                            FixDisplay();
+                            Console.WriteLine("Displaying all pizzerias you have visited");
+                            DisplayVisitedPizzerias();
+                            break;
+                        case 4:
+                            FixDisplay();
+                            //Console.WriteLine("Choose pizzeria that you want to add to the visited pizzeria list:");
+                            MarkPizzeriaAsVisited();
+                            // Console.WriteLine("Pizzeria marked as visited");
+                            // TODO: Make implementation here. Parse from search or display all?
+
+                            break;
+                        case 5:
+                            FixDisplay();
+                            //Console.WriteLine("Choose pizzeria that you want to remove from the visited pizzeria list:");
+                            //Console.WriteLine("Pizzeria removed from visited list");
+                            RemovePizzeriaFromVisited();
+                            // TODO: Make implementation here. Parse from search or display all?
+                            break;
+                        case 6:
+                            FixDisplay();
+                            Console.WriteLine("Editing pizzeria info");
+                            Console.WriteLine("Choose pizzeria which information you want to edit:");
+                            // TODO: Make implementation here. Parse from search or display all?
+                            // Console.WriteLine("Pizzeria info edited successfully.");
+                            break;
+                        case 7:
+                            FixDisplay();
+                            Console.WriteLine("Add new pizzeria");
+                            // TODO: Make implementation here. Parse from search or display all?
+                            // Console.WriteLine("Pizzeria added successfully.");
+                            break;
+                        case 8:
+                            FixDisplay();
+                            Console.WriteLine("Remove pizzeria");
+                            Console.WriteLine("Choose pizzeria that you want to remove:");
+                            // TODO: Make implementation here. Parse from search or display all?
+                            //Console.WriteLine("Pizzeria removed successfully.");
+                            break;
+                        case 0:
+                            Console.WriteLine("Exiting Rovaniemi pizza app");
+                            loop = false;
+                            break;
+                        default:
+                            FixDisplay();
+                            Console.WriteLine("~ Unknown input ~");
+                            break;
+                            // TODO: Make ask again.
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Expection caught");
+                Console.WriteLine("Input error");
+                // TODO: Make exit clean or make ask again...
+            }
+        }
+
+        static void DisplayMenu()
+        {
             Console.WriteLine("Rovaniemi pizza app\n");
             Console.WriteLine("1. Display all pizzerias");
             Console.WriteLine("2. Display pizzerias you have not visited");
@@ -21,69 +107,9 @@ namespace ROIPizza
             Console.WriteLine("7. Add new pizzeria");
             Console.WriteLine("8. Remove pizzeria");
             Console.WriteLine("\n--- 0. Exit Rovaniemi pizza app");
-
-            try
-            {
-            int selection = Int16.Parse(Console.ReadLine());
-            Console.WriteLine("You selected " + selection);
-            
-                switch (selection)
-                {
-                    case 1:
-                        Console.WriteLine("Displaying all pizzerias");
-                        DisplayEachPizzeria();
-                        break;
-                    case 2:
-                        Console.WriteLine("Displaying all pizzerias you have not visited");
-                        break;
-                    case 3:
-                        Console.WriteLine("Displaying all pizzerias you have visited");
-                        break;
-                    case 4:
-                        Console.WriteLine("Choose pizzeria that you want to add to the list:");
-                        Console.WriteLine("Pizzeria marked as visited");
-                        // TODO: Make implementation here. Parse from search or display all?
-                        break;
-                    case 5:
-                        Console.WriteLine("Choose pizzeria that you want to remove from the list:");
-                        Console.WriteLine("Pizzeria removed from visited list");
-                        // TODO: Make implementation here. Parse from search or display all?
-                        break;
-                    case 6:
-                        Console.WriteLine("Editing pizzeria info");
-                        Console.WriteLine("Choose pizzeria which information you want to edit:");
-                        // TODO: Make implementation here. Parse from search or display all?
-                        // Console.WriteLine("Pizzeria info edited successfully.");
-                        break;
-                    case 7:
-                        Console.WriteLine("Add new pizzeria");
-                        // TODO: Make implementation here. Parse from search or display all?
-                        // Console.WriteLine("Pizzeria added successfully.");
-                        break;
-                    case 8:
-                        Console.WriteLine("Remove pizzeria");
-                        Console.WriteLine("Choose pizzeria that you want to remove:");
-                        // TODO: Make implementation here. Parse from search or display all?
-                        //Console.WriteLine("Pizzeria removed successfully.");
-                        break;
-                    case 0:
-                        Console.WriteLine("Exiting Rovaniemi pizza app");
-                        break;
-                    default:
-                        Console.WriteLine("~ Unknown input ~");
-                        break;
-                        // TODO: Make ask again.
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Expection caught");
-                Console.WriteLine("Input error");
-                // TODO: Make exit clean or make ask again...
-            }
         }
 
-        static List<Pizzeria> InitializePizzeriaList()
+        static void InitializePizzeriaList()
         {
             Pizzeria memos = new Pizzeria();
             memos.SetName("memo");
@@ -91,11 +117,11 @@ namespace ROIPizza
             Pizzeria marmaris = new Pizzeria();
             marmaris.SetName("marmaris");
 
-            List<Pizzeria> list = new List<Pizzeria>();
-            list.Add(memos);
-            list.Add(marmaris);
+            //List<Pizzeria> list = new List<Pizzeria>();
+            m_fullPizzeriaList.Add(memos);
+            m_fullPizzeriaList.Add(marmaris);
 
-            return list;
+            m_NonVisitedPizzeriaList = m_fullPizzeriaList;
 
             // Array implementation
             /*
@@ -110,16 +136,87 @@ namespace ROIPizza
             }
             */
         }
-
+        
+        static void FixDisplay()
+        {
+            Console.Clear();
+            DisplayMenu();
+        }
+        
         static void DisplayEachPizzeria()
         {
             // Display each pizzeria
-            foreach (var item in InitializePizzeriaList())
+            foreach (var item in m_fullPizzeriaList)
             {
                 Console.WriteLine(item.GetName());
             }
         }
 
+        static void DisplayVisitedPizzerias()
+        {
+            Console.WriteLine("Displaying all pizzerias you have visited: "); //remove when working
+            // Display visited pizzerias
+            foreach (var item in m_visitedPizzeriaList)
+            {
+                Console.WriteLine(item.GetName());
+            }
+        }
+
+        static void DisplayNotVisitedPizzerias()
+        {
+            Console.WriteLine("Displaying all pizzerias you have not visited: "); //remove when working
+            // Display non visited pizzerias pizzeria
+            foreach (var item in m_NonVisitedPizzeriaList)
+            {
+                Console.WriteLine(item.GetName());
+            }
+        }
+
+        static void MarkPizzeriaAsVisited()
+        {
+            Console.WriteLine("Choose pizzeria that you want to add to the visited pizzeria list: ");
+            String pizzeriaName = Console.ReadLine();
+            foreach (var item in m_NonVisitedPizzeriaList)
+            {
+                if (item.GetName() == pizzeriaName)
+                {
+                    Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
+                    m_visitedPizzeriaList.Add(item);
+                    m_NonVisitedPizzeriaList.Remove(item);
+
+                    DisplayNotVisitedPizzerias(); //remove when done...
+                    DisplayVisitedPizzerias(); //remove when done...
+
+                    return;
+                }
+            }
+            Console.WriteLine($"Pizzeria {pizzeriaName} not found... ");
+        }
+
+        static void RemovePizzeriaFromVisited()
+        {
+            Console.WriteLine("Choose pizzeria that you want to add to remove from the visited pizzeria list: ");
+            String pizzeriaName = Console.ReadLine();
+            foreach (var item in m_visitedPizzeriaList)
+            {
+                if (item.GetName() == pizzeriaName)
+                {
+                    Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
+                    m_visitedPizzeriaList.Remove(item);
+                    m_NonVisitedPizzeriaList.Add(item);
+
+                    DisplayNotVisitedPizzerias(); //remove when done...
+                    DisplayVisitedPizzerias(); //remove when done...
+
+                    return;
+                }
+            }
+            Console.WriteLine($"Pizzeria {pizzeriaName} not found... ");
+        }
+
+        static List<Pizzeria> m_fullPizzeriaList = new List<Pizzeria>();
+        static List<Pizzeria> m_visitedPizzeriaList = new List<Pizzeria>();
+        static List<Pizzeria> m_NonVisitedPizzeriaList = new List<Pizzeria>();
     }
 }
 
