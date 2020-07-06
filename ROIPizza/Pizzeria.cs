@@ -2,59 +2,47 @@
 
 public class Pizzeria
 {
-	public Pizzeria()
-	{
-		//Name = GetName();
-	}
+    public Pizzeria() { }
 
-	public string GetName()
+    public string Name
     {
-		return m_name;
+        get { return m_name; }
+        set { m_name = value; }
     }
 
-	public void SetName(string name)
-	{
-		m_name = name;
-	}
-
-	public string GetNumber()
-	{
-		return m_number;
-	}
-
-	public void SetNumber(string number)
-	{
-		m_number = number;
-	}
-	public string GetAddress()
+    public string Number
     {
-		return m_address;
+        get { return m_number; }
+        set { m_number = value; }
+    }
+    public string Address
+    {
+        get { return m_address; }
+        set { m_address = value; }
     }
 
-	public void SetAddress(string address)
-	{
-		m_address= address;
-	}
-
-	public bool HasKebab()
+    public bool KebabAvailability
     {
-		return m_kebab;
+        get { return m_kebab; }
+        set { m_kebab = value; }
     }
 
-	public bool HasBurger()
-	{
-		return m_burger;
-	}
+    public bool BurgerAvailability
+    {
+        get { return m_burger; }
+        set { m_burger = value; }
+    }
 
-	public bool HasDelivery()
-	{
-		return m_delivery;
-	}
+    public bool DeliveryAvailability
+    {
+        get { return m_delivery; }
+        set { m_delivery = value; }
+    }
 
-	private String m_name;
-	private String m_number;
-	private String m_address;
-	private bool m_kebab;
-	private bool m_burger;
-	private bool m_delivery;
+    private String m_name;
+    private String m_number;
+    private String m_address;
+    private bool m_kebab;
+    private bool m_burger;
+    private bool m_delivery;
 }
