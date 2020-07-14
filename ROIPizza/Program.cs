@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 
 namespace ROIPizza
@@ -13,9 +12,15 @@ namespace ROIPizza
 
             DisplayMenu();
 
+            //FileHandler handler = new FileHandler();
+            //handler.FileToString();
+            //handler.ParseFile();
+            //handler.RemoveFromFile();
+            //handler.AddToFile();
+            // TODO: Clean after no longer needed for debugging.
+
             try
             {
-
                 bool loop = true;
                 while (loop)
                 {
@@ -40,20 +45,18 @@ namespace ROIPizza
                             break;
                         case 4:
                             FixDisplay();
-                            //Console.WriteLine("Display pizzeria info: ");
+                            Console.WriteLine("Choose pizzeria which information you want to display: ");
                             DisplaySpecificPizzeriaInfo();
                             break;
                         case 5:
                             FixDisplay();
-                            //Console.WriteLine("Choose pizzeria that you want to add to the visited pizzeria list:");
+                            Console.WriteLine("Choose pizzeria that you want to add to the visited pizzeria list:");
                             MarkPizzeriaAsVisited();
-                            // Console.WriteLine("Pizzeria marked as visited");
                             // TODO: Make implementation here. Parse from search or display all?
                             break;
                         case 6:
                             FixDisplay();
-                            //Console.WriteLine("Choose pizzeria that you want to remove from the visited pizzeria list:");
-                            //Console.WriteLine("Pizzeria removed from visited list");
+                            Console.WriteLine("Choose pizzeria that you want to remove from the visited pizzeria list: ");
                             RemovePizzeriaFromVisited();
                             // TODO: Make implementation here. Parse from search or display all?
                             break;
@@ -116,40 +119,67 @@ namespace ROIPizza
 
         static void InitializePizzeriaList()
         {
-            Pizzeria memos = new Pizzeria();
-            memos.Name = "Memo's";
-            memos.Address = "Vaylatie 51, 96300 Rovaniemi";
-            memos.Number = "016 3483663";
-            memos.DeliveryAvailability = true;
-            memos.KebabAvailability = true;
-            memos.BurgerAvailability = false;
+            FileHandler handler = new FileHandler();
+            handler.ParseFile();
 
-            Pizzeria marmaris = new Pizzeria();
-            marmaris.Name = "Marmaris";
-            marmaris.Address = "Ainonkatu 3, 96200 Rovaniemi";
-            marmaris.Number = "016 344330";
-            marmaris.DeliveryAvailability = true;
-            marmaris.KebabAvailability = true;
-            marmaris.BurgerAvailability = false;
+            var names = new List<String>();
+            var addresses = new List<String>();
+            var numbers = new List<String>();
+            var kebabs = new List<bool>();
+            var burgers = new List<bool>();
+            var deliveries = new List<bool>();
 
-            //List<Pizzeria> list = new List<Pizzeria>();
-            m_fullPizzeriaList.Add(memos);
-            m_fullPizzeriaList.Add(marmaris);
+            foreach (var name in handler.Name)
+            {
+                names.Add(name);
+            }
+
+            foreach (var address in handler.Address)
+            {
+                addresses.Add(address);
+            }
+
+            foreach (var number in handler.Number)
+            {
+                numbers.Add(number);
+            }
+
+            foreach (var kebab in handler.KebabAvailability)
+            {
+                kebabs.Add(kebab);
+            }
+
+            foreach (var burger in handler.BurgerAvailability)
+            {
+                burgers.Add(burger);
+            }
+
+            foreach (var delivery in handler.DeliveryAvailability)
+            {
+                deliveries.Add(delivery);
+            }
+
+            var amountOfPizzerias = names.Count();
+
+            // Console.WriteLine(amountOfPizzerias);
+            // TODO: Remove after no longer needed for debugging
+
+            int count = 0;
+            while (count < amountOfPizzerias)
+            {
+                var pizzeria = new Pizzeria(
+                    names.ElementAt<string>(count),
+                    numbers.ElementAt<string>(count),
+                    addresses.ElementAt<string>(count),
+                    kebabs.ElementAt<bool>(count),
+                    burgers.ElementAt<bool>(count),
+                    deliveries.ElementAt<bool>(count));
+
+                m_fullPizzeriaList.Add(pizzeria);
+                count++;
+            }
 
             m_NonVisitedPizzeriaList = m_fullPizzeriaList;
-
-            // Array implementation
-            /*
-            Pizzeria[] arr = new Pizzeria[2];
-
-            arr[0] = memos;
-            arr[1] = marmaris;
-
-            foreach (var itemz in arr)
-            {
-                Console.WriteLine(itemz.GetName());
-            }
-            */
         }
 
         static void FixDisplay()
@@ -157,18 +187,47 @@ namespace ROIPizza
             Console.Clear();
             DisplayMenu();
         }
+        static void DisplayEachPizzeria()
+        {
+            // 1
+            // Display each pizzeria
+            foreach (var item in m_fullPizzeriaList)
+            {
+                Console.WriteLine(item.Name);
+            }
+        }
+
+        static void DisplayNotVisitedPizzerias()
+        {
+            // 2
+            // Display non visited pizzerias pizzeria
+            foreach (var item in m_NonVisitedPizzeriaList)
+            {
+                Console.WriteLine(item.Name);
+            }
+        }
+
+        static void DisplayVisitedPizzerias()
+        {
+            //3
+            foreach (var item in m_visitedPizzeriaList)
+            {
+                Console.WriteLine(item.Name);
+            }
+        }
 
         static void DisplaySpecificPizzeriaInfo()
         {
-            Console.WriteLine("Choose pizzeria which information you want to display: ");
+            //4
             String pizzeriaName = Console.ReadLine();
             foreach (var item in m_fullPizzeriaList)
             {
                 if (item.Name == pizzeriaName)
                 {
-                    Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
-                    Console.WriteLine($"{item.Name}");
-                    Console.WriteLine($"{item.Address}");
+                    // Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
+                    // TODO: Remove after no longer needed for debugging.
+                    Console.WriteLine($"Name: {item.Name}");
+                    Console.WriteLine($"Address: {item.Address}");
                     Console.WriteLine($"Phone number: {item.Number}");
                     Console.WriteLine($"Kebab: {item.KebabAvailability}");
                     Console.WriteLine($"Burger: {item.BurgerAvailability}");
@@ -179,38 +238,10 @@ namespace ROIPizza
             Console.WriteLine($"Pizzeria {pizzeriaName} not found... ");
         }
 
-        static void DisplayEachPizzeria()
-        {
-            // Display each pizzeria
-            foreach (var item in m_fullPizzeriaList)
-            {
-                Console.WriteLine(item.Name);
-            }
-        }
-
-        static void DisplayVisitedPizzerias()
-        {
-            Console.WriteLine("Displaying all pizzerias you have visited: "); //remove when working
-            // Display visited pizzerias
-            foreach (var item in m_visitedPizzeriaList)
-            {
-                Console.WriteLine(item.Name);
-            }
-        }
-
-        static void DisplayNotVisitedPizzerias()
-        {
-            Console.WriteLine("Displaying all pizzerias you have not visited: "); //remove when working
-            // Display non visited pizzerias pizzeria
-            foreach (var item in m_NonVisitedPizzeriaList)
-            {
-                Console.WriteLine(item.Name);
-            }
-        }
-
         static void MarkPizzeriaAsVisited()
         {
-            Console.WriteLine("Choose pizzeria that you want to add to the visited pizzeria list: ");
+            // 5
+            // TODO: File usage
             String pizzeriaName = Console.ReadLine();
             foreach (var item in m_NonVisitedPizzeriaList)
             {
@@ -229,9 +260,10 @@ namespace ROIPizza
             Console.WriteLine($"Pizzeria {pizzeriaName} not found... ");
         }
 
-        static void RemovePizzeriaFromVisited()
+        static void RemovePizzeriaFromVisited() 
         {
-            Console.WriteLine("Choose pizzeria that you want to remove from the visited pizzeria list: ");
+            // 6
+            // TODO: File usage
             String pizzeriaName = Console.ReadLine();
             foreach (var item in m_visitedPizzeriaList)
             {

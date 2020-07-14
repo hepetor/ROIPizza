@@ -2,7 +2,15 @@
 
 public class Pizzeria
 {
-    public Pizzeria() { }
+    public Pizzeria(string name, string number, string address, bool kebab, bool burger, bool delivery)
+    {
+        Name = name;
+        Number = number;
+        Address = address;
+        KebabAvailability = kebab;
+        BurgerAvailability = burger;
+        DeliveryAvailability = delivery;
+    }
 
     public string Name
     {
