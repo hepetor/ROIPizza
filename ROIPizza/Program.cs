@@ -12,7 +12,8 @@ namespace ROIPizza
 
             DisplayMenu();
 
-            //FileHandler handler = new FileHandler();
+            FileHandler handler = new FileHandler();
+
             //handler.FileToString();
             //handler.ParseFile();
             //handler.RemoveFromFile();
@@ -70,8 +71,7 @@ namespace ROIPizza
                         case 8:
                             FixDisplay();
                             Console.WriteLine("Add new pizzeria");
-                            // TODO: Make implementation here. Parse from search or display all?
-                            // Console.WriteLine("Pizzeria added successfully.");
+                            AddNewPizzeria();
                             break;
                         case 9:
                             FixDisplay();
@@ -131,17 +131,26 @@ namespace ROIPizza
 
             foreach (var name in handler.Name)
             {
-                names.Add(name);
+                if (!names.Contains(name))
+                {
+                    names.Add(name);
+                }
             }
 
             foreach (var address in handler.Address)
             {
-                addresses.Add(address);
+                if (!addresses.Contains(address))
+                {
+                    addresses.Add(address);
+                }
             }
 
             foreach (var number in handler.Number)
             {
-                numbers.Add(number);
+                if (!numbers.Contains(number))
+                {
+                    numbers.Add(number);
+                }
             }
 
             foreach (var kebab in handler.KebabAvailability)
@@ -161,7 +170,7 @@ namespace ROIPizza
 
             var amountOfPizzerias = names.Count();
 
-            // Console.WriteLine(amountOfPizzerias);
+            Console.WriteLine(amountOfPizzerias);
             // TODO: Remove after no longer needed for debugging
 
             int count = 0;
@@ -210,6 +219,7 @@ namespace ROIPizza
         static void DisplayVisitedPizzerias()
         {
             //3
+            // TODO: Tell the user if its empty
             foreach (var item in m_visitedPizzeriaList)
             {
                 Console.WriteLine(item.Name);
@@ -260,7 +270,7 @@ namespace ROIPizza
             Console.WriteLine($"Pizzeria {pizzeriaName} not found... ");
         }
 
-        static void RemovePizzeriaFromVisited() 
+        static void RemovePizzeriaFromVisited()
         {
             // 6
             // TODO: File usage
@@ -282,9 +292,24 @@ namespace ROIPizza
             Console.WriteLine($"Pizzeria {pizzeriaName} not found... ");
         }
 
+        static void AddNewPizzeria()
+        {
+            FileHandler handler = new FileHandler();
+
+            handler.AddToFile();
+
+            Pizzeria newPizzeria = handler.GetNewPizzeria();
+
+            m_fullPizzeriaList.Add(newPizzeria);
+
+            Console.WriteLine("New pizzeria added successfully.");
+        }
+
         static List<Pizzeria> m_fullPizzeriaList = new List<Pizzeria>();
         static List<Pizzeria> m_visitedPizzeriaList = new List<Pizzeria>();
         static List<Pizzeria> m_NonVisitedPizzeriaList = new List<Pizzeria>();
     }
+
+
 }
 

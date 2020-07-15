@@ -134,23 +134,23 @@ namespace ROIPizza
             }
 
             Console.WriteLine("Add name: ");
-            string newPizzeriaName = ("Name:<" + Console.ReadLine() + ">\n");
+            m_newPizzeriaName = ("Name:<" + Console.ReadLine() + ">\n");
             Console.WriteLine("Add address: ");
-            string newPizzeriaAddress = ("Address:<" + Console.ReadLine() + ">\n");
+            m_newPizzeriaAddress = ("Address:<" + Console.ReadLine() + ">\n");
             Console.WriteLine("Add phone number: ");
-            string newPizzeriaPhoneNumber = ("Number<" + Console.ReadLine() + ">\n");
+            m_newPizzeriaNumber = ("Number:<" + Console.ReadLine() + ">\n");
 
-            bool validKebab = false;
-            string newPizzeriaKebabAvailability = String.Empty;
-            while (!validKebab)
+            bool m_newPizzeriaKebabAvailability = false;
+            string validKebab = String.Empty;
+            while (!m_newPizzeriaKebabAvailability)
             {
                 Console.WriteLine("Add kebab availability: (true/false)");
                 string kebabInput = Console.ReadLine();
 
                 if (kebabInput.Equals("true") || kebabInput.Equals("false"))
                 {
-                    newPizzeriaKebabAvailability = ("Kebab:<" + kebabInput + ">\n");
-                    validKebab = true;
+                    validKebab = ("Kebab:<" + kebabInput + ">\n");
+                    m_newPizzeriaKebabAvailability = true;
                 }
                 else
                 {
@@ -159,17 +159,17 @@ namespace ROIPizza
                 }
             }
 
-            bool validBurger = false;
-            string newPizzeriaBurgerAvailability = String.Empty;
-            while (!validBurger)
+            bool m_newPizzeriaBurgerAvailability = false;
+            string validBurger = String.Empty;
+            while (!m_newPizzeriaBurgerAvailability)
             {
                 Console.WriteLine("Add burger availability: (true/false)");
                 string burgerInput = Console.ReadLine();
 
                 if (burgerInput.Equals("true") || burgerInput.Equals("false"))
                 {
-                    newPizzeriaBurgerAvailability = ("Burger:<" + burgerInput + ">\n");
-                    validBurger = true;
+                    validBurger = ("Burger:<" + burgerInput + ">\n");
+                    m_newPizzeriaBurgerAvailability = true;
                 }
                 else
                 {
@@ -178,17 +178,17 @@ namespace ROIPizza
                 }
             }
 
-            bool validDelivery = false;
-            string newPizzeriaDeliveryAvailability = String.Empty;
-            while (!validDelivery)
+            bool m_newPizzeriaDeliveryAvailability = false;
+            string validDelivery = String.Empty;
+            while (!m_newPizzeriaDeliveryAvailability)
             {
                 Console.WriteLine("Add delivery availability: (true/false)");
                 string deliveryInput = Console.ReadLine();
 
                 if (deliveryInput.Equals("true") || deliveryInput.Equals("false"))
                 {
-                    newPizzeriaDeliveryAvailability = ("Delivery:<" + deliveryInput + ">\n");
-                    validDelivery = true;
+                    validDelivery = ("Delivery:<" + deliveryInput + ">\n");
+                    m_newPizzeriaDeliveryAvailability = true;
                 }
                 else
                 {
@@ -197,14 +197,33 @@ namespace ROIPizza
                 }
             }
 
-            string newpizzeria = "{\n" + newPizzeriaName + newPizzeriaAddress + newPizzeriaPhoneNumber + newPizzeriaKebabAvailability + newPizzeriaBurgerAvailability + newPizzeriaDeliveryAvailability + "}";
+            string newPizzeria = "{\n" + m_newPizzeriaName + m_newPizzeriaAddress + m_newPizzeriaNumber + validKebab + validBurger + validDelivery + "}";
 
             using (StreamWriter sw = File.AppendText(filePath))
             {
-                sw.WriteLine(newpizzeria);
+                sw.WriteLine(newPizzeria);
             }
+        }
 
-            Console.WriteLine("New pizzeria added successfully.");
+        public Pizzeria GetNewPizzeria()
+        {
+            Console.WriteLine(m_newPizzeriaName);
+
+            int start = m_newPizzeriaName.IndexOf("<") + "<".Length;
+            int end = m_newPizzeriaName.LastIndexOf(">");
+            string name = m_newPizzeriaName.Substring(start, end - start);
+
+            start = m_newPizzeriaAddress.IndexOf("<") + "<".Length;
+            end = m_newPizzeriaAddress.LastIndexOf(">");
+            string address = m_newPizzeriaAddress.Substring(start, end - start);
+
+            start = m_newPizzeriaNumber.IndexOf("<") + "<".Length;
+            end = m_newPizzeriaNumber.LastIndexOf(">");
+            string number = m_newPizzeriaNumber.Substring(start, end - start);
+
+            Pizzeria newPizzeria = new Pizzeria(name, address, number, m_newPizzeriaKebabAvailability, m_newPizzeriaBurgerAvailability, m_newPizzeriaDeliveryAvailability);
+
+            return newPizzeria;
         }
 
         public void RemoveFromFile()
@@ -277,6 +296,13 @@ namespace ROIPizza
         static List<bool> m_kebab = new List<bool>();
         static List<bool> m_burger = new List<bool>();
         static List<bool> m_delivery = new List<bool>();
+
+        string m_newPizzeriaName;
+        string m_newPizzeriaAddress;
+        string m_newPizzeriaNumber;
+        bool m_newPizzeriaKebabAvailability;
+        bool m_newPizzeriaBurgerAvailability;
+        bool m_newPizzeriaDeliveryAvailability;
 
     }
 }
