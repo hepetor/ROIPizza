@@ -12,6 +12,8 @@ TODO:
 - Remove "duplicated" code (create just one method for some parts)
 - Add readonly parameters 
 
+
+
 - Add pizzeria opening hours?
 - Find all the pizzeria info
 - Tests?
