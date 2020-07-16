@@ -70,15 +70,11 @@ namespace ROIPizza
                             break;
                         case 8:
                             FixDisplay();
-                            Console.WriteLine("Add new pizzeria");
                             AddNewPizzeria();
                             break;
                         case 9:
                             FixDisplay();
-                            Console.WriteLine("Remove pizzeria");
-                            Console.WriteLine("Choose pizzeria that you want to remove:");
-                            // TODO: Make implementation here. Parse from search or display all?
-                            //Console.WriteLine("Pizzeria removed successfully.");
+                            RemovePizzeria();
                             break;
                         case 0:
                             Console.WriteLine("Exiting Rovaniemi pizza app");
@@ -188,7 +184,7 @@ namespace ROIPizza
                 count++;
             }
 
-            m_NonVisitedPizzeriaList = m_fullPizzeriaList;
+            m_nonVisitedPizzeriaList = m_fullPizzeriaList;
         }
 
         static void FixDisplay()
@@ -210,7 +206,7 @@ namespace ROIPizza
         {
             // 2
             // Display non visited pizzerias pizzeria
-            foreach (var item in m_NonVisitedPizzeriaList)
+            foreach (var item in m_nonVisitedPizzeriaList)
             {
                 Console.WriteLine(item.Name);
             }
@@ -253,13 +249,13 @@ namespace ROIPizza
             // 5
             // TODO: File usage
             String pizzeriaName = Console.ReadLine();
-            foreach (var item in m_NonVisitedPizzeriaList)
+            foreach (var item in m_nonVisitedPizzeriaList)
             {
                 if (item.Name == pizzeriaName)
                 {
                     Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
                     m_visitedPizzeriaList.Add(item);
-                    m_NonVisitedPizzeriaList.Remove(item);
+                    m_nonVisitedPizzeriaList.Remove(item);
 
                     DisplayNotVisitedPizzerias(); //remove when done...
                     DisplayVisitedPizzerias(); //remove when done...
@@ -281,7 +277,7 @@ namespace ROIPizza
                 {
                     Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
                     m_visitedPizzeriaList.Remove(item);
-                    m_NonVisitedPizzeriaList.Add(item);
+                    m_nonVisitedPizzeriaList.Add(item);
 
                     DisplayNotVisitedPizzerias(); //remove when done...
                     DisplayVisitedPizzerias(); //remove when done...
@@ -294,6 +290,8 @@ namespace ROIPizza
 
         static void AddNewPizzeria()
         {
+            Console.WriteLine("Add new pizzeria");
+
             FileHandler handler = new FileHandler();
 
             handler.AddToFile();
@@ -305,9 +303,34 @@ namespace ROIPizza
             Console.WriteLine("New pizzeria added successfully.");
         }
 
+        static void RemovePizzeria()
+        {
+            Console.WriteLine("Choose pizzeria that you want to remove:");
+
+            String pizzeriaName = Console.ReadLine();
+
+            foreach (var item in m_fullPizzeriaList)
+            {
+                if (item.Name == pizzeriaName)
+                {
+                    Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
+                    m_fullPizzeriaList.Remove(item);
+                    m_visitedPizzeriaList.Remove(item);
+                    m_nonVisitedPizzeriaList.Remove(item);
+
+                    FileHandler handler = new FileHandler();
+                    handler.RemoveFromFile(pizzeriaName);
+
+                    Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
+                    return;
+                }
+            }
+        }
+
+
         static List<Pizzeria> m_fullPizzeriaList = new List<Pizzeria>();
         static List<Pizzeria> m_visitedPizzeriaList = new List<Pizzeria>();
-        static List<Pizzeria> m_NonVisitedPizzeriaList = new List<Pizzeria>();
+        static List<Pizzeria> m_nonVisitedPizzeriaList = new List<Pizzeria>();
     }
 
 

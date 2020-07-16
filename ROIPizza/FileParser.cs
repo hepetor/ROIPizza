@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -9,28 +10,26 @@ namespace ROIPizza
     class FileHandler
     {
 
-        public string GetPath()
+        // Path to the location of the full pizzeria list
+        public string GetFullPizzeriaListPath()
         {
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
             string fileDirectory = Directory.GetParent(projectDirectory).Parent.FullName;
 
-            string filePath = (fileDirectory) + "\\ROIPizza\\pizzeriaList.txt";
+            string filePath = (fileDirectory) + "\\ROIPizza\\fullPizzeriaList.txt";
 
             return filePath;
         }
 
+        // Get contents of the list of pizzerias file in to a string
         public string FileToString()
         {
-            string filePath = GetPath();
+            string filePath = GetFullPizzeriaListPath();
 
             if (!File.Exists(filePath))
             {
                 Console.WriteLine("pizzeria file not found! ");// make exit
-            }
-            else
-            {
-                Console.WriteLine("Pizzeria file FOUND! ");
             }
 
             string textString = File.ReadAllText(filePath);
@@ -38,6 +37,8 @@ namespace ROIPizza
             return textString;
         }
 
+        // Parse pizzeria list file
+        // Get the properties of each pizzeria
         public void ParseFile()
         {
             string text = FileToString();
@@ -120,17 +121,14 @@ namespace ROIPizza
             }
         }
 
+        // Add new pizzeria to a file
         public void AddToFile()
         {
-            string filePath = GetPath();
+            string filePath = GetFullPizzeriaListPath();
 
             if (!File.Exists(filePath))
             {
-                Console.WriteLine("pizzeria file not found! ");// make exit
-            }
-            else
-            {
-                Console.WriteLine("Pizzeria file FOUND! ");
+                Console.WriteLine("pizzeria file not found! "); // make exit
             }
 
             Console.WriteLine("Add name: ");
@@ -205,6 +203,7 @@ namespace ROIPizza
             }
         }
 
+        // Return the new added pizzeria object
         public Pizzeria GetNewPizzeria()
         {
             Console.WriteLine(m_newPizzeriaName);
@@ -226,16 +225,26 @@ namespace ROIPizza
             return newPizzeria;
         }
 
-        public void RemoveFromFile()
+        // Remove pizzeria from the pizzeria file
+        public void RemoveFromFile(string pizzeriaName)
         {
+            Collection<string> pizzaCollection = new Collection<string>();
+            string finalPizzerias = String.Empty;
+            string filePath = GetFullPizzeriaListPath();
+
+            if (!File.Exists(filePath))
+            {
+                Console.WriteLine("pizzeria file not found! ");// make exit
+            }
+
             string text = FileToString();
-
-            Console.WriteLine("Enter pizzeria to be deleted: ");
-            string input = Console.ReadLine();
-
             string[] pizzerias = Regex.Split(text, @"(?<=[}])");
+
             foreach (string pizzeria in pizzerias)
             {
+                // Add each pizzeria from the pizzeria list to a collection
+                pizzaCollection.Add(pizzeria);
+
                 string[] properties = Regex.Split(pizzeria, @"(?<=[>])");
                 foreach (string property in properties)
                 {
@@ -244,16 +253,31 @@ namespace ROIPizza
                         int start = property.IndexOf("<") + "<".Length;
                         int end = property.LastIndexOf(">");
                         string name = property.Substring(start, end - start);
-                        if (name.Equals(input))
-                        {
-                            Console.WriteLine("pizzeria found!! !");
 
-                            // TODO: implement delete here... (time consuming task)
+                        if (name.Equals(pizzeriaName))
+                        {
+                            // Remove the specific pizzeria from the collection
+                            pizzaCollection.Remove(pizzeria);
+                            // Remove empty lines from the collection //TODO: check if needed
+                            pizzaCollection.Remove("");
+
+                            // Clear the pizzeria file
+                            File.WriteAllText(filePath, String.Empty);
                         }
                     }
                 }
             }
+
+            // Clean empty lines and whitespace, add the collection of pizzerias to a string
+            finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            if (finalPizzerias != String.Empty)
+            {
+                // Add rest of the pizzerias to the file
+                File.WriteAllText(filePath, finalPizzerias);
+            }
         }
+
+
 
         public List<string> Name
         {

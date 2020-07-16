@@ -14,3 +14,11 @@ Kebab:<true>
 Burger:<false>
 Delivery:<true>
 }
+{
+Name:<Venninpiste>
+Address:<Kevätportti 2, 96190 Rovaniemi>
+Number:<040 5036929>
+Kebab:<true>
+Burger:<true>
+Delivery:<true>
+}
