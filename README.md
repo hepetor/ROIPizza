@@ -6,7 +6,11 @@ Hobby project for learning C# and in the future possible useful application for 
 TODO:
 - Functionality of course...
 
-- Add formatter for the code (to make it look more clean)  Ctrl+K, Ctrl+F
 - Find all the pizzeria info
-- Store pizzeria's into file? Easier for array/list handling?
-- Figure out if ROIPizzaSolution.sln can be removed from GIT
+- Visited/Not visited pizzerias into own file, in order for the program to remember user changes (keep the full file aswell)
+- Removing / Editing pizzeria info from the command line
+- Remove "duplicated" code (create just one method for some parts)
+- Add readonly parameters 
+
+- Tests?
+- Graphic interface ? --> new project
