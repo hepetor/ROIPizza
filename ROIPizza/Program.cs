@@ -429,6 +429,9 @@ namespace ROIPizza
                     m_visitedPizzeriaList.Remove(item);
                     m_nonVisitedPizzeriaList.Add(item);
 
+                    FileHandler handler = new FileHandler();
+                    handler.AddToNonVisitedFile(pizzeriaName);
+
                     DisplayNotVisitedPizzerias(); //remove when done...
                     DisplayVisitedPizzerias(); //remove when done...
 

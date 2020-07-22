@@ -438,6 +438,112 @@ namespace ROIPizza
 
         }
 
+        public void AddToNonVisitedFile(string pizzeriaName)
+        {
+            Collection<string> pizzaCollection = new Collection<string>();
+            Collection<string> nonVisitedPizzeriasCollection = new Collection<string>();
+
+            string finalPizzerias = String.Empty;
+            string filePathNonVisited = GetNonVisitedPizzeriaListPath();
+
+            if (!File.Exists(filePathNonVisited))
+            {
+                Console.WriteLine("pizzeria file not found! ");// make exit
+            }
+
+            //
+            string text = FullPizzeriaFileToString();
+            string[] pizzerias = Regex.Split(text, @"(?<=[}])");
+
+            foreach (string pizzeria in pizzerias)
+            {
+                // Add each pizzeria from the pizzeria list to a collection
+                pizzaCollection.Add(pizzeria);
+
+                string[] properties = Regex.Split(pizzeria, @"(?<=[>])");
+                foreach (string property in properties)
+                {
+                    if (property.Contains("Name"))
+                    {
+                        int start = property.IndexOf("<") + "<".Length;
+                        int end = property.LastIndexOf(">");
+                        string name = property.Substring(start, end - start);
+
+                        if (name.Equals(pizzeriaName))
+                        {
+                            Console.WriteLine("PIZZERIA WANTED TO MOVE FOUIND !! <<<<<< ");
+                            nonVisitedPizzeriasCollection.Add(pizzeria);
+
+                        }
+                    }
+                }
+            }
+
+            string toBeAdded = Regex.Replace(string.Join("\n", nonVisitedPizzeriasCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            Console.WriteLine("TO BE ADDED =  " + toBeAdded);
+
+            // TODO: REMOVE FROM THE "NON VISITED LIST"
+            RemoveFromVisitedFile(pizzeriaName);
+            //
+
+            string newPizzeria = toBeAdded;
+
+            using (StreamWriter sw = File.AppendText(filePathNonVisited))
+            {
+                sw.WriteLine(newPizzeria);
+            }
+        }
+
+        public void RemoveFromVisitedFile(string pizzeriaName)
+        {
+            Collection<string> pizzaCollection = new Collection<string>();
+            string finalPizzerias = String.Empty;
+            string filePathVisited = GetVisitedPizzeriaListPath();
+
+            string text = VisitedPizzeriaFileToString();
+            string[] pizzerias = Regex.Split(text, @"(?<=[}])");
+
+            foreach (string pizzeria in pizzerias)
+            {
+                // Add each pizzeria from the pizzeria list to a collection
+                pizzaCollection.Add(pizzeria);
+
+                string[] properties = Regex.Split(pizzeria, @"(?<=[>])");
+                foreach (string property in properties)
+                {
+                    if (property.Contains("Name"))
+                    {
+                        int start = property.IndexOf("<") + "<".Length;
+                        int end = property.LastIndexOf(">");
+                        string name = property.Substring(start, end - start);
+
+                        if (name.Equals(pizzeriaName))
+                        {
+                            // Remove the specific pizzeria from the collection
+                            pizzaCollection.Remove(pizzeria);
+                            // Remove empty lines from the collection //TODO: check if needed
+                            pizzaCollection.Remove("");
+
+                            // Clear the pizzeria file
+                            File.WriteAllText(GetVisitedPizzeriaListPath(), String.Empty);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Pizzeria" + pizzeriaName + "did not exist in this file.");
+                        }
+                    }
+                }
+            }
+
+            // Clean empty lines and whitespace, add the collection of pizzerias to a string
+            finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            if (finalPizzerias != String.Empty)
+            {
+                // Add rest of the pizzerias to the file
+                File.WriteAllText(GetVisitedPizzeriaListPath(), finalPizzerias);
+            }
+        }
+
         // Parse pizzeria list file
         // Get the properties of each pizzeria
         public void ParseVisitedFile()
