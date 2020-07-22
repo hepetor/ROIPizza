@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace ROIPizza
@@ -8,7 +9,9 @@ namespace ROIPizza
     {
         static void Main(string[] args)
         {
-            InitializePizzeriaList();
+            InitializeFullPizzeriaList();
+            InitializeVisitedPizzeriaList();
+            InitializeNonVisitedPizzeriaList();
 
             DisplayMenu();
 
@@ -113,10 +116,10 @@ namespace ROIPizza
             Console.WriteLine("\n--- 0. Exit Rovaniemi pizza app");
         }
 
-        static void InitializePizzeriaList()
+        static void InitializeFullPizzeriaList()
         {
             FileHandler handler = new FileHandler();
-            handler.ParseFile();
+            handler.ParseFullFile();
 
             var names = new List<String>();
             var addresses = new List<String>();
@@ -166,7 +169,7 @@ namespace ROIPizza
 
             var amountOfPizzerias = names.Count();
 
-            Console.WriteLine(amountOfPizzerias);
+            Console.WriteLine("Full pizzerias list: " + amountOfPizzerias);
             // TODO: Remove after no longer needed for debugging
 
             int count = 0;
@@ -184,8 +187,152 @@ namespace ROIPizza
                 count++;
             }
 
-            m_nonVisitedPizzeriaList = m_fullPizzeriaList;
         }
+
+        static void InitializeVisitedPizzeriaList()
+        {
+            FileHandler handler = new FileHandler();
+            handler.ParseVisitedFile();
+
+            var names = new List<String>();
+            var addresses = new List<String>();
+            var numbers = new List<String>();
+            var kebabs = new List<bool>();
+            var burgers = new List<bool>();
+            var deliveries = new List<bool>();
+
+            foreach (var name in handler.VisitedName)
+            {
+                if (!names.Contains(name))
+                {
+                    names.Add(name);
+                }
+            }
+
+            foreach (var address in handler.VisitedAddress)
+            {
+                if (!addresses.Contains(address))
+                {
+                    addresses.Add(address);
+                }
+            }
+
+            foreach (var number in handler.VisitedNumber)
+            {
+                if (!numbers.Contains(number))
+                {
+                    numbers.Add(number);
+                }
+            }
+
+            foreach (var kebab in handler.VisitedKebabAvailability)
+            {
+                kebabs.Add(kebab);
+            }
+
+            foreach (var burger in handler.VisitedBurgerAvailability)
+            {
+                burgers.Add(burger);
+            }
+
+            foreach (var delivery in handler.VisitedDeliveryAvailability)
+            {
+                deliveries.Add(delivery);
+            }
+
+            var amountOfPizzerias = names.Count();
+
+            Console.WriteLine("Visited pizzerias: " + amountOfPizzerias);
+            // TODO: Remove after no longer needed for debugging
+
+            int count = 0;
+            while (count < amountOfPizzerias)
+            {
+                var pizzeria = new Pizzeria(
+                    names.ElementAt<string>(count),
+                    numbers.ElementAt<string>(count),
+                    addresses.ElementAt<string>(count),
+                    kebabs.ElementAt<bool>(count),
+                    burgers.ElementAt<bool>(count),
+                    deliveries.ElementAt<bool>(count));
+
+                m_visitedPizzeriaList.Add(pizzeria);
+                count++;
+            }
+        }
+
+        static void InitializeNonVisitedPizzeriaList()
+        {
+            FileHandler handler = new FileHandler();
+            handler.ParseNonVisitedFile();
+
+            var names = new List<String>();
+            var addresses = new List<String>();
+            var numbers = new List<String>();
+            var kebabs = new List<bool>();
+            var burgers = new List<bool>();
+            var deliveries = new List<bool>();
+
+            foreach (var name in handler.NonVisitedName)
+            {
+                if (!names.Contains(name))
+                {
+                    names.Add(name);
+                }
+            }
+
+            foreach (var address in handler.NonVisitedAddress)
+            {
+                if (!addresses.Contains(address))
+                {
+                    addresses.Add(address);
+                }
+            }
+
+            foreach (var number in handler.NonVisitedNumber)
+            {
+                if (!numbers.Contains(number))
+                {
+                    numbers.Add(number);
+                }
+            }
+
+            foreach (var kebab in handler.NonVisitedKebabAvailability)
+            {
+                kebabs.Add(kebab);
+            }
+
+            foreach (var burger in handler.NonVisitedBurgerAvailability)
+            {
+                burgers.Add(burger);
+            }
+
+            foreach (var delivery in handler.NonVisitedDeliveryAvailability)
+            {
+                deliveries.Add(delivery);
+            }
+
+            var amountOfPizzerias = names.Count();
+
+            Console.WriteLine("Non visited pizzerias: " + amountOfPizzerias);
+            // TODO: Remove after no longer needed for debugging
+
+            int count = 0;
+            while (count < amountOfPizzerias)
+            {
+                var pizzeria = new Pizzeria(
+                    names.ElementAt<string>(count),
+                    numbers.ElementAt<string>(count),
+                    addresses.ElementAt<string>(count),
+                    kebabs.ElementAt<bool>(count),
+                    burgers.ElementAt<bool>(count),
+                    deliveries.ElementAt<bool>(count));
+
+                m_nonVisitedPizzeriaList.Add(pizzeria);
+                count++;
+            }
+        }
+
 
         static void FixDisplay()
         {
@@ -257,8 +404,11 @@ namespace ROIPizza
                     m_visitedPizzeriaList.Add(item);
                     m_nonVisitedPizzeriaList.Remove(item);
 
-                    DisplayNotVisitedPizzerias(); //remove when done...
-                    DisplayVisitedPizzerias(); //remove when done...
+                    FileHandler handler = new FileHandler();
+                    handler.AddToVisitedFile(pizzeriaName);
+
+
+
 
                     return;
                 }
@@ -305,7 +455,7 @@ namespace ROIPizza
 
         static void RemovePizzeria()
         {
-            Console.WriteLine("Choose pizzeria that you want to remove:");
+            Console.WriteLine("Choose pizzeria that you want to remove completely:");
 
             String pizzeriaName = Console.ReadLine();
 
@@ -319,6 +469,8 @@ namespace ROIPizza
                     m_nonVisitedPizzeriaList.Remove(item);
 
                     FileHandler handler = new FileHandler();
+                    string filePath = handler.GetFullPizzeriaListPath();
+
                     handler.RemoveFromFile(pizzeriaName);
 
                     Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");

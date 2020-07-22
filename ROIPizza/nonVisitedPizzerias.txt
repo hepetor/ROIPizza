@@ -1,0 +1,24 @@
+{
+Name:<Marmaris>
+Address:<Ainonkatu 3, 96200 Rovaniemi>
+Number:<016 344330>
+Kebab:<true>
+Burger:<false>
+Delivery:<true>
+}
+{
+Name:<Memo's>
+Address:<Vaylatie 51, 96300 Rovaniemi>
+Number:<016 3483663>
+Kebab:<true>
+Burger:<false>
+Delivery:<true>
+}
+{
+Name:<Venninpiste>
+Address:<Kevätportti 2, 96190 Rovaniemi>
+Number:<040 5036929>
+Kebab:<true>
+Burger:<true>
+Delivery:<true>
+}
