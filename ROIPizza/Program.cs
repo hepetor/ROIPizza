@@ -56,13 +56,11 @@ namespace ROIPizza
                             FixDisplay();
                             Console.WriteLine("Choose pizzeria that you want to add to the visited pizzeria list:");
                             MarkPizzeriaAsVisited();
-                            // TODO: Make implementation here. Parse from search or display all?
                             break;
                         case 6:
                             FixDisplay();
                             Console.WriteLine("Choose pizzeria that you want to remove from the visited pizzeria list: ");
                             RemovePizzeriaFromVisited();
-                            // TODO: Make implementation here. Parse from search or display all?
                             break;
                         case 7:
                             FixDisplay();
