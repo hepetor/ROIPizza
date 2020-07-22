@@ -21,7 +21,7 @@ TODO:
 - Add readonly parameters 
 
 
-
+(extra, when done):
 - Add pizzeria opening hours?
 - Find all the pizzeria info
 - Tests?
