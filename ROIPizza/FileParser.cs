@@ -16,7 +16,6 @@ namespace ROIPizza
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
             string fileDirectory = Directory.GetParent(projectDirectory).Parent.FullName;
-
             string filePath = (fileDirectory) + "\\ROIPizza\\fullPizzeriaList.txt";
 
             return filePath;
@@ -27,7 +26,6 @@ namespace ROIPizza
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
             string fileDirectory = Directory.GetParent(projectDirectory).Parent.FullName;
-
             string filePath = (fileDirectory) + "\\ROIPizza\\visitedPizzerias.txt";
 
             return filePath;
@@ -38,7 +36,6 @@ namespace ROIPizza
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
             string fileDirectory = Directory.GetParent(projectDirectory).Parent.FullName;
-
             string filePath = (fileDirectory) + "\\ROIPizza\\nonVisitedPizzerias.txt";
 
             return filePath;
@@ -276,13 +273,8 @@ namespace ROIPizza
         public void RemoveFromFile(string pizzeriaName)
         {
             Collection<string> pizzaCollection = new Collection<string>();
-            string finalPizzerias = String.Empty;
+            // string finalPizzerias = String.Empty;
             string fullPizzeriasPath = GetFullPizzeriaListPath();
-
-            //if (!File.Exists(filePath))
-            //{
-            //    Console.WriteLine("pizzeria file not found! ");// make exit
-            //}
 
             string text = FullPizzeriaFileToString();
             string[] pizzerias = Regex.Split(text, @"(?<=[}])");
@@ -309,22 +301,18 @@ namespace ROIPizza
                             pizzaCollection.Remove("");
 
                             // Clear the pizzeria file
-                            File.WriteAllText(GetFullPizzeriaListPath(), String.Empty);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Pizzeria" + pizzeriaName + "did not exist in this file.");
+                            File.WriteAllText(fullPizzeriasPath, String.Empty);
                         }
                     }
                 }
             }
 
             // Clean empty lines and whitespace, add the collection of pizzerias to a string
-            finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            string finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
             if (finalPizzerias != String.Empty)
             {
                 // Add rest of the pizzerias to the file
-                File.WriteAllText(GetFullPizzeriaListPath(), finalPizzerias);
+                File.WriteAllText(fullPizzeriasPath, finalPizzerias);
             }
         }
 
@@ -333,10 +321,10 @@ namespace ROIPizza
             Collection<string> pizzaCollection = new Collection<string>();
             Collection<string> visitedPizzeriasCollection = new Collection<string>();
 
-            string finalPizzerias = String.Empty;
+            //   string finalPizzerias = String.Empty;
             string filePathVisited = GetVisitedPizzeriaListPath();
 
-            string fileAllPizzeriasPath = GetFullPizzeriaListPath();
+            //  string fileAllPizzeriasPath = GetFullPizzeriaListPath();
 
             if (!File.Exists(filePathVisited))
             {
@@ -363,20 +351,15 @@ namespace ROIPizza
 
                         if (name.Equals(pizzeriaName))
                         {
-                            Console.WriteLine("PIZZERIA WANTED TO MOVE FOUIND !! <<<<<< ");
                             visitedPizzeriasCollection.Add(pizzeria);
-
                         }
                     }
                 }
             }
 
             string toBeAdded = Regex.Replace(string.Join("\n", visitedPizzeriasCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
-            Console.WriteLine("TO BE ADDED =  " + toBeAdded);
 
-            // TODO: REMOVE FROM THE "NON VISITED LIST"
             RemoveFromNonVisitedFile(pizzeriaName);
-            //
 
             string newPizzeria = toBeAdded;
 
@@ -390,7 +373,6 @@ namespace ROIPizza
         public void RemoveFromNonVisitedFile(string pizzeriaName)
         {
             Collection<string> pizzaCollection = new Collection<string>();
-            string finalPizzerias = String.Empty;
             string filePathNonVisited = GetNonVisitedPizzeriaListPath();
 
             string text = NonVisitedPizzeriaFileToString();
@@ -418,22 +400,18 @@ namespace ROIPizza
                             pizzaCollection.Remove("");
 
                             // Clear the pizzeria file
-                            File.WriteAllText(GetNonVisitedPizzeriaListPath(), String.Empty);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Pizzeria" + pizzeriaName + "did not exist in this file.");
+                            File.WriteAllText(filePathNonVisited, String.Empty);
                         }
                     }
                 }
             }
 
             // Clean empty lines and whitespace, add the collection of pizzerias to a string
-            finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            string finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
             if (finalPizzerias != String.Empty)
             {
                 // Add rest of the pizzerias to the file
-                File.WriteAllText(GetNonVisitedPizzeriaListPath(), finalPizzerias);
+                File.WriteAllText(filePathNonVisited, finalPizzerias);
             }
 
         }
@@ -443,7 +421,7 @@ namespace ROIPizza
             Collection<string> pizzaCollection = new Collection<string>();
             Collection<string> nonVisitedPizzeriasCollection = new Collection<string>();
 
-            string finalPizzerias = String.Empty;
+            // string finalPizzerias = String.Empty;
             string filePathNonVisited = GetNonVisitedPizzeriaListPath();
 
             if (!File.Exists(filePathNonVisited))
@@ -451,7 +429,6 @@ namespace ROIPizza
                 Console.WriteLine("pizzeria file not found! ");// make exit
             }
 
-            //
             string text = FullPizzeriaFileToString();
             string[] pizzerias = Regex.Split(text, @"(?<=[}])");
 
@@ -471,7 +448,6 @@ namespace ROIPizza
 
                         if (name.Equals(pizzeriaName))
                         {
-                            Console.WriteLine("PIZZERIA WANTED TO MOVE FOUIND !! <<<<<< ");
                             nonVisitedPizzeriasCollection.Add(pizzeria);
 
                         }
@@ -480,11 +456,8 @@ namespace ROIPizza
             }
 
             string toBeAdded = Regex.Replace(string.Join("\n", nonVisitedPizzeriasCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
-            Console.WriteLine("TO BE ADDED =  " + toBeAdded);
 
-            // TODO: REMOVE FROM THE "NON VISITED LIST"
             RemoveFromVisitedFile(pizzeriaName);
-            //
 
             string newPizzeria = toBeAdded;
 
@@ -497,7 +470,6 @@ namespace ROIPizza
         public void RemoveFromVisitedFile(string pizzeriaName)
         {
             Collection<string> pizzaCollection = new Collection<string>();
-            string finalPizzerias = String.Empty;
             string filePathVisited = GetVisitedPizzeriaListPath();
 
             string text = VisitedPizzeriaFileToString();
@@ -525,18 +497,14 @@ namespace ROIPizza
                             pizzaCollection.Remove("");
 
                             // Clear the pizzeria file
-                            File.WriteAllText(GetVisitedPizzeriaListPath(), String.Empty);
-                        }
-                        else
-                        {
-                            Console.WriteLine("Pizzeria" + pizzeriaName + "did not exist in this file.");
+                            File.WriteAllText(filePathVisited, String.Empty);
                         }
                     }
                 }
             }
 
             // Clean empty lines and whitespace, add the collection of pizzerias to a string
-            finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            string finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
             if (finalPizzerias != String.Empty)
             {
                 // Add rest of the pizzerias to the file

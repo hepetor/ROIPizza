@@ -54,12 +54,10 @@ namespace ROIPizza
                             break;
                         case 5:
                             FixDisplay();
-                            Console.WriteLine("Choose pizzeria that you want to add to the visited pizzeria list:");
                             MarkPizzeriaAsVisited();
                             break;
                         case 6:
                             FixDisplay();
-                            Console.WriteLine("Choose pizzeria that you want to remove from the visited pizzeria list: ");
                             RemovePizzeriaFromVisited();
                             break;
                         case 7:
@@ -108,7 +106,11 @@ namespace ROIPizza
             Console.WriteLine("5. Mark pizzeria as visited");
             Console.WriteLine("6. Remove pizzeria from visited list");
             Console.WriteLine("----");
-            Console.WriteLine("7. Edit pizzeria info");
+            Console.BackgroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine("7. Edit pizzeria info"); //TODO
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("8. Add new pizzeria");
             Console.WriteLine("9. Remove pizzeria");
             Console.WriteLine("\n--- 0. Exit Rovaniemi pizza app");
@@ -375,8 +377,6 @@ namespace ROIPizza
             {
                 if (item.Name == pizzeriaName)
                 {
-                    // Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
-                    // TODO: Remove after no longer needed for debugging.
                     Console.WriteLine($"Name: {item.Name}");
                     Console.WriteLine($"Address: {item.Address}");
                     Console.WriteLine($"Phone number: {item.Number}");
@@ -391,6 +391,21 @@ namespace ROIPizza
 
         static void MarkPizzeriaAsVisited()
         {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(" --- ");
+
+            foreach (var item in m_nonVisitedPizzeriaList)
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine(item.Name);
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(" --- ");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Type the pizzeria that you want to mark as visited pizzeria:");
+
+
             // 5
             // TODO: File usage
             String pizzeriaName = Console.ReadLine();
@@ -398,15 +413,11 @@ namespace ROIPizza
             {
                 if (item.Name == pizzeriaName)
                 {
-                    Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
                     m_visitedPizzeriaList.Add(item);
                     m_nonVisitedPizzeriaList.Remove(item);
 
                     FileHandler handler = new FileHandler();
                     handler.AddToVisitedFile(pizzeriaName);
-
-
-
 
                     return;
                 }
@@ -416,23 +427,32 @@ namespace ROIPizza
 
         static void RemovePizzeriaFromVisited()
         {
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(" --- ");
+
+            foreach (var item in m_visitedPizzeriaList)
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine(item.Name);
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine(" --- ");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("Type the pizzeria that you want mark as non visited:");
+
             // 6
-            // TODO: File usage
             String pizzeriaName = Console.ReadLine();
             foreach (var item in m_visitedPizzeriaList)
             {
                 if (item.Name == pizzeriaName)
                 {
-                    Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
                     m_visitedPizzeriaList.Remove(item);
                     m_nonVisitedPizzeriaList.Add(item);
 
                     FileHandler handler = new FileHandler();
                     handler.AddToNonVisitedFile(pizzeriaName);
-
-                    DisplayNotVisitedPizzerias(); //remove when done...
-                    DisplayVisitedPizzerias(); //remove when done...
-
                     return;
                 }
             }
@@ -450,6 +470,7 @@ namespace ROIPizza
             Pizzeria newPizzeria = handler.GetNewPizzeria();
 
             m_fullPizzeriaList.Add(newPizzeria);
+            m_nonVisitedPizzeriaList.Add(newPizzeria);
 
             Console.WriteLine("New pizzeria added successfully.");
         }
@@ -458,34 +479,58 @@ namespace ROIPizza
         {
             Console.WriteLine("Choose pizzeria that you want to remove completely:");
 
-            String pizzeriaName = Console.ReadLine();
+            FileHandler handler = new FileHandler();
 
-            foreach (var item in m_fullPizzeriaList)
+            string pizzeriaName = Console.ReadLine();
+
+            try
             {
-                if (item.Name == pizzeriaName)
+                foreach (var item in m_fullPizzeriaList)
                 {
-                    Console.WriteLine($">>>> {pizzeriaName} Pizzeria found ");
-                    m_fullPizzeriaList.Remove(item);
-                    m_visitedPizzeriaList.Remove(item);
-                    m_nonVisitedPizzeriaList.Remove(item);
+                    if (item.Name == pizzeriaName)
+                    {
+                        m_fullPizzeriaList.Remove(item);
+                        handler.RemoveFromFile(pizzeriaName);
+                        Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
+                        break;
+                    }
+                }
 
-                    FileHandler handler = new FileHandler();
-                    string filePath = handler.GetFullPizzeriaListPath();
+                foreach (var item in m_visitedPizzeriaList)
+                {
+                    if (item.Name == pizzeriaName)
+                    {
+                        m_visitedPizzeriaList.Remove(item);
+                        handler.RemoveFromVisitedFile(pizzeriaName);
+                        Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
+                        break;
 
-                    handler.RemoveFromFile(pizzeriaName);
+                    }
+                }
 
-                    Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
-                    return;
+                foreach (var item in m_nonVisitedPizzeriaList)
+                {
+                    if (item.Name == pizzeriaName)
+                    {
+                        m_nonVisitedPizzeriaList.Remove(item);
+                        handler.RemoveFromNonVisitedFile(pizzeriaName);
+                        Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
+                        break;
+
+                    }
                 }
             }
-        }
 
+            catch (Exception)
+            {
+                Console.WriteLine(">>>>>>>>> EXCEPTION"); //Debug 
+            }
+            return;
+        }
 
         static List<Pizzeria> m_fullPizzeriaList = new List<Pizzeria>();
         static List<Pizzeria> m_visitedPizzeriaList = new List<Pizzeria>();
         static List<Pizzeria> m_nonVisitedPizzeriaList = new List<Pizzeria>();
     }
-
-
 }
 
