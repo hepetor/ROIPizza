@@ -8,7 +8,10 @@ Hobby project for learning C# and creating a possibly useful application for cho
 
 TODO:
 
-
+##
+- Check file usage when adding large amount of pizzerias
+##
+- Delete empty files from the pizzeria files
 ##
 - Editing pizzeria info from the command line
 ##
@@ -25,6 +28,7 @@ TODO:
 
 (extra, when done):
 - Add pizzeria opening hours?
+- Add mayonnaise availablity?
 - Find all the pizzeria info
 - Tests?
 - Graphic interface ? --> new project
