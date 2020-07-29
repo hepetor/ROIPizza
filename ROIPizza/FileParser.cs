@@ -270,14 +270,14 @@ namespace ROIPizza
         }
 
         // Remove pizzeria from the pizzeria file
-        public void RemoveFromFile(string pizzeriaName)
+        public void RemoveFromFile(string pizzeriaName, string filePath, string pizzeriaFileText)
         {
             Collection<string> pizzaCollection = new Collection<string>();
             // string finalPizzerias = String.Empty;
-            string fullPizzeriasPath = GetFullPizzeriaListPath();
+            // string filePath = GetFullPizzeriaListPath();
 
-            string text = FullPizzeriaFileToString();
-            string[] pizzerias = Regex.Split(text, @"(?<=[}])");
+           // string pizzeriaFileText = FullPizzeriaFileToString();
+            string[] pizzerias = Regex.Split(pizzeriaFileText, @"(?<=[}])");
 
             foreach (string pizzeria in pizzerias)
             {
@@ -301,7 +301,7 @@ namespace ROIPizza
                             pizzaCollection.Remove("");
 
                             // Clear the pizzeria file
-                            File.WriteAllText(fullPizzeriasPath, String.Empty);
+                            File.WriteAllText(filePath, String.Empty);
                         }
                     }
                 }
@@ -312,7 +312,7 @@ namespace ROIPizza
             if (finalPizzerias != String.Empty)
             {
                 // Add rest of the pizzerias to the file
-                File.WriteAllText(fullPizzeriasPath, finalPizzerias);
+                File.WriteAllText(filePath, finalPizzerias);
             }
         }
 
@@ -359,7 +359,7 @@ namespace ROIPizza
 
             string toBeAdded = Regex.Replace(string.Join("\n", visitedPizzeriasCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
 
-            RemoveFromNonVisitedFile(pizzeriaName);
+            RemoveFromFile(pizzeriaName, GetNonVisitedPizzeriaListPath(), NonVisitedPizzeriaFileToString());
 
             string newPizzeria = toBeAdded;
 
@@ -370,52 +370,7 @@ namespace ROIPizza
 
         }
 
-        public void RemoveFromNonVisitedFile(string pizzeriaName)
-        {
-            Collection<string> pizzaCollection = new Collection<string>();
-            string filePathNonVisited = GetNonVisitedPizzeriaListPath();
-
-            string text = NonVisitedPizzeriaFileToString();
-            string[] pizzerias = Regex.Split(text, @"(?<=[}])");
-
-            foreach (string pizzeria in pizzerias)
-            {
-                // Add each pizzeria from the pizzeria list to a collection
-                pizzaCollection.Add(pizzeria);
-
-                string[] properties = Regex.Split(pizzeria, @"(?<=[>])");
-                foreach (string property in properties)
-                {
-                    if (property.Contains("Name"))
-                    {
-                        int start = property.IndexOf("<") + "<".Length;
-                        int end = property.LastIndexOf(">");
-                        string name = property.Substring(start, end - start);
-
-                        if (name.Equals(pizzeriaName))
-                        {
-                            // Remove the specific pizzeria from the collection
-                            pizzaCollection.Remove(pizzeria);
-                            // Remove empty lines from the collection //TODO: check if needed
-                            pizzaCollection.Remove("");
-
-                            // Clear the pizzeria file
-                            File.WriteAllText(filePathNonVisited, String.Empty);
-                        }
-                    }
-                }
-            }
-
-            // Clean empty lines and whitespace, add the collection of pizzerias to a string
-            string finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
-            if (finalPizzerias != String.Empty)
-            {
-                // Add rest of the pizzerias to the file
-                File.WriteAllText(filePathNonVisited, finalPizzerias);
-            }
-
-        }
-
+      
         public void AddToNonVisitedFile(string pizzeriaName)
         {
             Collection<string> pizzaCollection = new Collection<string>();
@@ -457,7 +412,7 @@ namespace ROIPizza
 
             string toBeAdded = Regex.Replace(string.Join("\n", nonVisitedPizzeriasCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
 
-            RemoveFromVisitedFile(pizzeriaName);
+            RemoveFromFile(pizzeriaName, GetVisitedPizzeriaListPath(), VisitedPizzeriaFileToString());
 
             string newPizzeria = toBeAdded;
 
@@ -467,51 +422,7 @@ namespace ROIPizza
             }
         }
 
-        public void RemoveFromVisitedFile(string pizzeriaName)
-        {
-            Collection<string> pizzaCollection = new Collection<string>();
-            string filePathVisited = GetVisitedPizzeriaListPath();
-
-            string text = VisitedPizzeriaFileToString();
-            string[] pizzerias = Regex.Split(text, @"(?<=[}])");
-
-            foreach (string pizzeria in pizzerias)
-            {
-                // Add each pizzeria from the pizzeria list to a collection
-                pizzaCollection.Add(pizzeria);
-
-                string[] properties = Regex.Split(pizzeria, @"(?<=[>])");
-                foreach (string property in properties)
-                {
-                    if (property.Contains("Name"))
-                    {
-                        int start = property.IndexOf("<") + "<".Length;
-                        int end = property.LastIndexOf(">");
-                        string name = property.Substring(start, end - start);
-
-                        if (name.Equals(pizzeriaName))
-                        {
-                            // Remove the specific pizzeria from the collection
-                            pizzaCollection.Remove(pizzeria);
-                            // Remove empty lines from the collection //TODO: check if needed
-                            pizzaCollection.Remove("");
-
-                            // Clear the pizzeria file
-                            File.WriteAllText(filePathVisited, String.Empty);
-                        }
-                    }
-                }
-            }
-
-            // Clean empty lines and whitespace, add the collection of pizzerias to a string
-            string finalPizzerias = Regex.Replace(string.Join("\n", pizzaCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
-            if (finalPizzerias != String.Empty)
-            {
-                // Add rest of the pizzerias to the file
-                File.WriteAllText(GetVisitedPizzeriaListPath(), finalPizzerias);
-            }
-        }
-
+     
         // Parse pizzeria list file
         // Get the properties of each pizzeria
         public void ParseVisitedFile()

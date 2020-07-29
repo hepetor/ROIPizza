@@ -490,7 +490,9 @@ namespace ROIPizza
                     if (item.Name == pizzeriaName)
                     {
                         m_fullPizzeriaList.Remove(item);
-                        handler.RemoveFromFile(pizzeriaName);
+                        string filePath = handler.GetFullPizzeriaListPath();
+                        string text = handler.FullPizzeriaFileToString();
+                        handler.RemoveFromFile(pizzeriaName, filePath, text);
                         Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
                         break;
                     }
@@ -501,7 +503,11 @@ namespace ROIPizza
                     if (item.Name == pizzeriaName)
                     {
                         m_visitedPizzeriaList.Remove(item);
-                        handler.RemoveFromVisitedFile(pizzeriaName);
+
+                        string filePath = handler.GetVisitedPizzeriaListPath();
+                        string text = handler.VisitedPizzeriaFileToString();
+                        handler.RemoveFromFile(pizzeriaName, filePath, text);
+
                         Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
                         break;
 
@@ -513,7 +519,11 @@ namespace ROIPizza
                     if (item.Name == pizzeriaName)
                     {
                         m_nonVisitedPizzeriaList.Remove(item);
-                        handler.RemoveFromNonVisitedFile(pizzeriaName);
+
+                        string filePath = handler.GetNonVisitedPizzeriaListPath();
+                        string text = handler.NonVisitedPizzeriaFileToString();
+                        handler.RemoveFromFile(pizzeriaName, filePath, text);
+
                         Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
                         break;
 
