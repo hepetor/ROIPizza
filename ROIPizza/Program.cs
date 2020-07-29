@@ -490,10 +490,9 @@ namespace ROIPizza
                     if (item.Name == pizzeriaName)
                     {
                         m_fullPizzeriaList.Remove(item);
-                        string filePath = handler.GetFullPizzeriaListPath();
-                        string text = handler.FullPizzeriaFileToString();
-                        handler.RemoveFromFile(pizzeriaName, filePath, text);
-                        Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
+                        string fullPizzeriaFilePath = handler.GetFullPizzeriaListPath();
+                        string text = handler.PizzeriaFileToString(fullPizzeriaFilePath);
+                        handler.RemoveFromFile(pizzeriaName, fullPizzeriaFilePath, text);
                         break;
                     }
                 }
@@ -504,11 +503,9 @@ namespace ROIPizza
                     {
                         m_visitedPizzeriaList.Remove(item);
 
-                        string filePath = handler.GetVisitedPizzeriaListPath();
-                        string text = handler.VisitedPizzeriaFileToString();
-                        handler.RemoveFromFile(pizzeriaName, filePath, text);
-
-                        Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
+                        string visitedPizzeriaFilePath = handler.GetVisitedPizzeriaListPath();
+                        string text = handler.PizzeriaFileToString(visitedPizzeriaFilePath);
+                        handler.RemoveFromFile(pizzeriaName, visitedPizzeriaFilePath, text);
                         break;
 
                     }
@@ -520,11 +517,10 @@ namespace ROIPizza
                     {
                         m_nonVisitedPizzeriaList.Remove(item);
 
-                        string filePath = handler.GetNonVisitedPizzeriaListPath();
-                        string text = handler.NonVisitedPizzeriaFileToString();
-                        handler.RemoveFromFile(pizzeriaName, filePath, text);
+                        string NonVisitedPizzeriaFilePath = handler.GetNonVisitedPizzeriaListPath();
+                        string text = handler.PizzeriaFileToString(NonVisitedPizzeriaFilePath);
 
-                        Console.WriteLine($">>>> {pizzeriaName} Pizzeria deleted successfully. ");
+                        handler.RemoveFromFile(pizzeriaName, NonVisitedPizzeriaFilePath, text);
                         break;
 
                     }
