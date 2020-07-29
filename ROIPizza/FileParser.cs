@@ -141,18 +141,28 @@ namespace ROIPizza
         // Add new pizzeria to a file
         public void AddToFile()
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Add name: ");
+            Console.ForegroundColor = ConsoleColor.Gray;
             m_newPizzeriaName = ("Name:<" + Console.ReadLine() + ">\n");
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Add address: ");
+            Console.ForegroundColor = ConsoleColor.Gray;
             m_newPizzeriaAddress = ("Address:<" + Console.ReadLine() + ">\n");
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("Add phone number: ");
+            Console.ForegroundColor = ConsoleColor.Gray;
             m_newPizzeriaNumber = ("Number:<" + Console.ReadLine() + ">\n");
 
             bool m_newPizzeriaKebabAvailability = false;
             string validKebab = String.Empty;
             while (!m_newPizzeriaKebabAvailability)
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Add kebab availability: (true/false)");
+                Console.ForegroundColor = ConsoleColor.Gray;
                 string kebabInput = Console.ReadLine();
 
                 if (kebabInput.Equals("true") || kebabInput.Equals("false"))
@@ -162,7 +172,9 @@ namespace ROIPizza
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("Invalid input, please type 'true/false'");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     continue;
                 }
             }
@@ -171,7 +183,10 @@ namespace ROIPizza
             string validBurger = String.Empty;
             while (!m_newPizzeriaBurgerAvailability)
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Add burger availability: (true/false)");
+                Console.ForegroundColor = ConsoleColor.Gray;
+
                 string burgerInput = Console.ReadLine();
 
                 if (burgerInput.Equals("true") || burgerInput.Equals("false"))
@@ -181,7 +196,9 @@ namespace ROIPizza
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("Invalid input, please type 'true/false'");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     continue;
                 }
             }
@@ -190,7 +207,10 @@ namespace ROIPizza
             string validDelivery = String.Empty;
             while (!m_newPizzeriaDeliveryAvailability)
             {
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("Add delivery availability: (true/false)");
+                Console.ForegroundColor = ConsoleColor.Gray;
+
                 string deliveryInput = Console.ReadLine();
 
                 if (deliveryInput.Equals("true") || deliveryInput.Equals("false"))
@@ -200,7 +220,9 @@ namespace ROIPizza
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkRed;
                     Console.WriteLine("Invalid input, please type 'true/false'");
+                    Console.ForegroundColor = ConsoleColor.Gray;
                     continue;
                 }
             }
@@ -221,8 +243,6 @@ namespace ROIPizza
         // Return the new added pizzeria object
         public Pizzeria GetNewPizzeria()
         {
-            Console.WriteLine(m_newPizzeriaName);
-
             int start = m_newPizzeriaName.IndexOf("<") + "<".Length;
             int end = m_newPizzeriaName.LastIndexOf(">");
             string name = m_newPizzeriaName.Substring(start, end - start);
@@ -321,17 +341,14 @@ namespace ROIPizza
                 }
             }
 
-            string toBeAdded = Regex.Replace(string.Join("\n", visitedPizzeriasCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            string pizzeriaToBeAdded = Regex.Replace(string.Join("\n", visitedPizzeriasCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
 
             RemoveFromFile(pizzeriaName, GetNonVisitedPizzeriaListPath(), PizzeriaFileToString(GetNonVisitedPizzeriaListPath()));
 
-            string newPizzeria = toBeAdded;
-
             using (StreamWriter sw = File.AppendText(filePathVisited))
             {
-                sw.WriteLine(newPizzeria);
+                sw.WriteLine(pizzeriaToBeAdded);
             }
-
         }
 
 
@@ -367,21 +384,18 @@ namespace ROIPizza
                         if (name.Equals(pizzeriaName))
                         {
                             nonVisitedPizzeriasCollection.Add(pizzeria);
-
                         }
                     }
                 }
             }
 
-            string toBeAdded = Regex.Replace(string.Join("\n", nonVisitedPizzeriasCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
+            string pizzeriaToBeAdded = Regex.Replace(string.Join("\n", nonVisitedPizzeriasCollection), @"^\s+$[\r\n]*", string.Empty, RegexOptions.Multiline);
 
             RemoveFromFile(pizzeriaName, GetVisitedPizzeriaListPath(), PizzeriaFileToString(GetVisitedPizzeriaListPath()));
 
-            string newPizzeria = toBeAdded;
-
             using (StreamWriter sw = File.AppendText(filePathNonVisited))
             {
-                sw.WriteLine(newPizzeria);
+                sw.WriteLine(pizzeriaToBeAdded);
             }
         }
 
