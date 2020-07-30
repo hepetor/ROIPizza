@@ -13,8 +13,6 @@ TODO:
 ##
 - Delete empty files from the pizzeria files
 ##
-- Editing pizzeria info from the command line
-##
 - Fix user inputs (Ignore empty or incorrect user inputs) 
 ##
 - Exception handling
