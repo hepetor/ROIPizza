@@ -233,11 +233,6 @@ namespace ROIPizza
             {
                 sw.WriteLine(newPizzeria);
             }
-
-            using (StreamWriter sw = File.AppendText(GetNonVisitedPizzeriaListPath()))
-            {
-                sw.WriteLine(newPizzeria);
-            }
         }
 
         // Return the new added pizzeria object
@@ -284,8 +279,6 @@ namespace ROIPizza
                         {
                             // Remove the specific pizzeria from the collection
                             pizzaCollection.Remove(pizzeria);
-                            // Remove empty lines from the collection //TODO: check if needed
-                            pizzaCollection.Remove("");
 
                             // Clear the pizzeria file
                             File.WriteAllText(filePath, String.Empty);
@@ -567,7 +560,6 @@ namespace ROIPizza
                 }
             }
         }
-
 
         public List<string> Name
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace ROIPizza
@@ -62,10 +61,7 @@ namespace ROIPizza
                             break;
                         case "7":
                             FixDisplay();
-                            Console.WriteLine("Editing pizzeria info");
-                            Console.WriteLine("Choose pizzeria which information you want to edit:");
-                            // TODO: Make implementation here. Parse from search or display all?
-                            // Console.WriteLine("Pizzeria info edited successfully.");
+                            EditPizzeriaInfo();
                             break;
                         case "8":
                             FixDisplay();
@@ -115,11 +111,7 @@ namespace ROIPizza
             Console.WriteLine("5. Mark pizzeria as visited");
             Console.WriteLine("6. Remove pizzeria from visited list");
             Console.WriteLine("----");
-            Console.BackgroundColor = ConsoleColor.Gray;
-            Console.ForegroundColor = ConsoleColor.Black;
-            Console.WriteLine("7. Edit pizzeria info"); //TODO
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("7. Edit pizzeria info");
             Console.WriteLine("8. Add new pizzeria");
             Console.WriteLine("9. Remove pizzeria");
             Console.WriteLine("\n--- 0. Exit Rovaniemi pizza app");
@@ -352,34 +344,69 @@ namespace ROIPizza
         {
             // 1
             // Display each pizzeria
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("---");
+            Console.ForegroundColor = ConsoleColor.Gray;
             foreach (var item in m_fullPizzeriaList)
             {
                 Console.WriteLine(item.Name);
             }
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("---");
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         static void DisplayNotVisitedPizzerias()
         {
             // 2
-            // Display non visited pizzerias pizzeria
-            foreach (var item in m_nonVisitedPizzeriaList)
+            if (m_nonVisitedPizzeriaList.Count != 0)
             {
-                Console.WriteLine(item.Name);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("---");
+                Console.ForegroundColor = ConsoleColor.Gray;
+
+                foreach (var item in m_nonVisitedPizzeriaList)
+                {
+                    Console.WriteLine(item.Name);
+                }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("---");
+                Console.ForegroundColor = ConsoleColor.Gray;
             }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("You have already visited all the pizzerias");
+            }
+
         }
 
         static void DisplayVisitedPizzerias()
         {
             //3
-            // TODO: Tell the user if its empty
-            foreach (var item in m_visitedPizzeriaList)
+            if (m_visitedPizzeriaList.Count != 0)
             {
-                Console.WriteLine(item.Name);
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("---");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                foreach (var item in m_visitedPizzeriaList)
+                {
+                    Console.WriteLine(item.Name);
+                }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("---");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.DarkRed;
+                Console.WriteLine("You have not visited any pizzerias");
             }
         }
 
         static void DisplaySpecificPizzeriaInfo()
         {
+            Console.ForegroundColor = ConsoleColor.Blue;
             Console.ForegroundColor = ConsoleColor.Blue;
             Console.WriteLine(" --- ");
             foreach (var item in m_fullPizzeriaList)
@@ -425,10 +452,10 @@ namespace ROIPizza
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(" --- ");
+                Console.ForegroundColor = ConsoleColor.Gray;
 
                 foreach (var item in m_nonVisitedPizzeriaList)
                 {
-                    Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine(item.Name);
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -535,6 +562,8 @@ namespace ROIPizza
 
             Pizzeria newPizzeria = handler.GetNewPizzeria();
 
+            handler.AddToNonVisitedFile(newPizzeria.Name);
+
             m_fullPizzeriaList.Add(newPizzeria);
             m_nonVisitedPizzeriaList.Add(newPizzeria);
 
@@ -593,14 +622,12 @@ namespace ROIPizza
 
                         handler.RemoveFromFile(pizzeriaName, NonVisitedPizzeriaFilePath, text);
                         break;
-
                     }
                 }
             }
-
             catch (Exception)
             {
-                Console.WriteLine(">>>>>>>>> EXCEPTION"); //Debug 
+                Console.WriteLine(">>>>>>>>> EXCEPTION"); //Debug
             }
 
             if (removed)
@@ -617,6 +644,132 @@ namespace ROIPizza
             }
 
             return;
+        }
+
+        static void EditPizzeriaInfo()
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine(" --- ");
+            foreach (var item in m_fullPizzeriaList)
+            {
+                Console.WriteLine(item.Name);
+            }
+            Console.WriteLine(" --- ");
+            Console.ForegroundColor = ConsoleColor.Gray;
+
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Choose pizzeria which information you want to edit:");
+            Console.ForegroundColor = ConsoleColor.Gray;
+            String pizzeriaName = Console.ReadLine();
+
+            //4
+            foreach (var item in m_fullPizzeriaList)
+            {
+                if (item.Name == pizzeriaName)
+                {
+                    FixDisplay();
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.WriteLine($"Current information of pizzeria {item.Name} :");
+                    Console.WriteLine(" --- ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+
+                    Console.WriteLine($"Name: {item.Name}");
+                    Console.WriteLine($"Address: {item.Address}");
+                    Console.WriteLine($"Phone number: {item.Number}");
+                    Console.WriteLine($"Kebab: {item.KebabAvailability}");
+                    Console.WriteLine($"Burger: {item.BurgerAvailability}");
+                    Console.WriteLine($"Delivery: {item.DeliveryAvailability}");
+                    Console.ForegroundColor = ConsoleColor.Blue;
+
+                    Console.WriteLine(" --- ");
+                    Console.ForegroundColor = ConsoleColor.Gray;
+                    break;
+                }
+            }
+
+            FileHandler handler = new FileHandler();
+
+            bool exists = false;
+            bool visited = false;
+            bool nonVisited = false;
+
+            string fullPizzeriaFilePath = handler.GetFullPizzeriaListPath();
+            string visitedPizzeriaFilePath = handler.GetVisitedPizzeriaListPath();
+            string nonVisitedPizzeriaFilePath = handler.GetNonVisitedPizzeriaListPath();
+
+
+            try
+            {
+                foreach (var item in m_fullPizzeriaList)
+                {
+                    if (item.Name == pizzeriaName)
+                    {
+                        m_fullPizzeriaList.Remove(item);
+                        exists = true;
+                        break;
+                    }
+                }
+
+                foreach (var item in m_visitedPizzeriaList)
+                {
+                    if (item.Name == pizzeriaName)
+                    {
+                        m_visitedPizzeriaList.Remove(item);
+                        visited = true;
+                        break;
+                    }
+                }
+
+                foreach (var item in m_nonVisitedPizzeriaList)
+                {
+                    if (item.Name == pizzeriaName)
+                    {
+                        m_nonVisitedPizzeriaList.Remove(item);
+                        nonVisited = true;
+                        break;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine(">>>>>>>>> EXCEPTION"); //Debug 
+            }
+
+            if (exists)
+            {
+                handler.AddToFile();
+                m_fullPizzeriaList.Add(handler.GetNewPizzeria());
+                //string fullPizzeriaFilePath = handler.GetFullPizzeriaListPath();
+                string text = handler.PizzeriaFileToString(fullPizzeriaFilePath);
+                handler.RemoveFromFile(pizzeriaName, fullPizzeriaFilePath, text);
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("Pizzeria information updated successfully.");
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Pizzeria does not exist!");
+                Console.ForegroundColor = ConsoleColor.Gray;
+                return;
+            }
+
+            if (visited)
+            {
+                handler.AddToVisitedFile(handler.GetNewPizzeria().Name);
+                m_visitedPizzeriaList.Add(handler.GetNewPizzeria());
+                string text = handler.PizzeriaFileToString(visitedPizzeriaFilePath);
+                handler.RemoveFromFile(pizzeriaName, visitedPizzeriaFilePath, text);
+
+            }
+            if (nonVisited)
+            {
+                handler.AddToNonVisitedFile(handler.GetNewPizzeria().Name);
+                m_nonVisitedPizzeriaList.Add(handler.GetNewPizzeria());
+                string text = handler.PizzeriaFileToString(nonVisitedPizzeriaFilePath);
+                handler.RemoveFromFile(pizzeriaName, nonVisitedPizzeriaFilePath, text);
+            }
         }
 
         static List<Pizzeria> m_fullPizzeriaList = new List<Pizzeria>();
