@@ -17,8 +17,6 @@ TODO:
 ##
 - Exception handling
 ##
-- Remove "duplicated" code (create just one method for some parts)
-##
 - Add readonly parameters 
 
 &nbsp;
