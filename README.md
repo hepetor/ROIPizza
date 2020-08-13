@@ -11,13 +11,14 @@ TODO:
 ##
 - Check file usage when adding large amount of pizzerias
 ##
-- Delete empty files from the pizzeria files
+- Delete empty liles from the pizzeria files
 ##
 - Fix user inputs (Ignore empty or incorrect user inputs) 
 ##
 - Exception handling
 ##
 - Add readonly parameters 
+...
 
 &nbsp;
 &nbsp;
